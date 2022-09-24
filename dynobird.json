@@ -1,0 +1,15 @@
+{
+	"entitiesDir": "app/Models",
+	"migrationsDir": "database/migrations",
+	"framework": "laravel",
+	"frameworkVersion": "8",
+	"token": "36c4faa9ebe52385465484b4ba8f667fc1bba040cc2e2c9a57217ad579531058321055532d2d9e3b46e758c5245cd9fb26c1",
+	"db": {
+		"type": "MY_SQL",
+		"host": "containers-us-west-65.railway.app",
+		"user": "root",
+		"password": "4Nxgotm6kYWmd3Y1Ot3c",
+		"database": "railway",
+		"port": 5634
+	}
+}
