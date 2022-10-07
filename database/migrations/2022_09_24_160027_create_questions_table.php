@@ -19,7 +19,7 @@ return new class extends Migration
             $table->longText("content");
             $table->longText("markdown");
             $table->foreignId("user_id");
-            $table->integer("votes");
+            $table->integer("votes")->default(0);
             $table->timestamps();
         });
     }

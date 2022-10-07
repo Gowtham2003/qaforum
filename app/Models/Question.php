@@ -21,4 +21,7 @@ class Question extends Model
         "votes",
         "comments"
     ];
+    public function user(){
+      return $this->belongsTo(User::class);
+    }
 }
