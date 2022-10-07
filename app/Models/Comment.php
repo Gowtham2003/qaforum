@@ -18,4 +18,7 @@ class Comment extends Model
         "votes"
 
     ];
+    public function question(){
+        return $this->belongsTo(Question::class);
+      }
 }

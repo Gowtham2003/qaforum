@@ -20,6 +20,10 @@ class QuestionController extends Controller
         $user = $request->userinfo;
         return Question::where("user_id",$user->id)->paginate();
     }
+    public function getComments()
+    {
+        return Question::with("comments")->all();
+    }
     public function create(Request $request)
     {
         $user = $request->userinfo;
@@ -30,8 +34,8 @@ class QuestionController extends Controller
 	
 
         $data = $request->all();
-        $data["user_id"] = $user->id;
-        $data["markdown"] = Str::markdown($data["content"]);
+        $data['user_id'] = $user->id;
+        $data['markdown'] = Str::markdown($data['content']);
 		
 
 		return Question::create($data);

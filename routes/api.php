@@ -20,9 +20,13 @@ Route::middleware(CheckAuth::class)->group(function (){
   Route::get('/', function () {
     return 'Hello World';
 });
+Route::put('/changepassword',[UserController::class,'changepassword']);
+
 Route::post('/question',[QuestionController::class,'create']);
 Route::put('/question/{id}/upvote',[QuestionController::class,'upvote']);
 Route::put('/question/{id}/downvote',[QuestionController::class,'downvote']);
+Route::put('/question/{id}',[QuestionController::class,'update']);
+Route::delete('/question/{id}',[QuestionController::class,'destroy']);
 });
 
 Route::post('/register',[UserController::class,'register']);
@@ -30,3 +34,6 @@ Route::post('/login',[UserController::class,'login']);
 Route::get('/questions',[QuestionController::class,'index']);
 Route::get('/user/{id}',[UserController::class,'show']);
 Route::get('/question/{id}',[QuestionController::class,'show']);
+
+Route::get('/question/comments',[QuestionController::class,'getComments']);
+
