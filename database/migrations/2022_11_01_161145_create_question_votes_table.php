@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('questions_votes', function (Blueprint $table) {
             $table->id();
-            $table->longText("comment");
-            $table->integer("votes");
+            $table->unsignedInteger('vote');
+            $table->foreignId("user_id")->constrained()->cascadeondelete();
+            $table->foreignId("question_id")->constrained()->cascadeondelete();
             $table->timestamps();
         });
-
     }
 
     /**
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('question_votes');
     }
 };

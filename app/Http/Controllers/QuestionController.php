@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateQuestionRequest;
 use App\Models\Question;
+use App\Models\QuestionVote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -12,13 +13,13 @@ class QuestionController extends Controller
 {
     public function index()
     {
-        return Question::paginate();
+        return Question::with("user", "votes")->paginate();
     }
 
     public function indexByUser(Request $request)
     {
         $user = $request->userinfo;
-        return Question::where("user_id",$user->id)->paginate();
+        return Question::where("user_id", $user->id)->paginate();
     }
     public function getComments()
     {
@@ -31,14 +32,14 @@ class QuestionController extends Controller
             'title' => 'required',
             'content' => 'required',
         ]);
-	
+
 
         $data = $request->all();
         $data['user_id'] = $user->id;
         $data['markdown'] = Str::markdown($data['content']);
-		
 
-		return Question::create($data);
+
+        return Question::create($data);
     }
 
     public function show($id)
@@ -67,14 +68,27 @@ class QuestionController extends Controller
     {
         return Question::destroy($id);
     }
-    public function upvote($id){
-      $question = Question::find($id);
-      $question->update(array('votes'=>$question->votes+1));
-      return $question;
+    public function upvote($id)
+    {
+        $question = Question::find($id);
+        $existingVote = QuestionVote::where("question_id", $id)->where("user_id", request()->userinfo->id)->first();
+        if ($existingVote) {
+            if (!$existingVote->vote == 1) $existingVote->update(["vote" => 1]);
+        } else {
+            QuestionVote::create(["question_id" => $id, "user_id" => request()->userinfo->id, "vote" => 1]);
+        };
+
+        return "success";
     }
-    public function downvote($id){
-      $question = Question::find($id);
-      $question->update(array('votes'=>$question->votes-1));
-      return $question;
+    public function downvote($id)
+    {
+        $question = Question::find($id);
+        $existingVote = QuestionVote::where("question_id", $id)->where("user_id", request()->userinfo->id)->first();
+        if ($existingVote) {
+            if (!$existingVote->vote == -1) $existingVote->update(["vote" => -1]);
+        } else {
+            QuestionVote::create(["question_id" => $id, "user_id" => request()->userinfo->id, "vote" => -1]);
+        };
+        return $question;
     }
 }

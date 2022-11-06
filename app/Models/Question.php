@@ -21,10 +21,30 @@ class Question extends Model
         "votes",
         "comments"
     ];
-    public function user(){
-      return $this->belongsTo(User::class);
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
-    public function comments(){
-      return $this->hasMany(Comment::class);
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+    public function votes()
+    {
+        return $this->hasMany(QuestionVote::class);
+    }
+    public function getVotes()
+    {
+        $votes = $this->votes;
+        $upvotes = 0;
+        $downvotes = 0;
+        foreach ($votes as $vote) {
+            if ($vote->vote == 1) {
+                $upvotes++;
+            } else {
+                $downvotes++;
+            }
+        }
+        return $upvotes - $downvotes;
     }
 }
