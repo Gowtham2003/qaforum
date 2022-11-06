@@ -33,7 +33,7 @@ class Question extends Model
     {
         return $this->hasMany(QuestionVote::class);
     }
-    public function getVotes()
+    protected function getVotes ()
     {
         $votes = $this->votes;
         $upvotes = 0;

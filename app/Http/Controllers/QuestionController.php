@@ -13,7 +13,7 @@ class QuestionController extends Controller
 {
     public function index()
     {
-        return Question::with("user", "votes")->paginate();
+        return Question::with("user")->withCount("votes")->paginate();
     }
 
     public function indexByUser(Request $request)
