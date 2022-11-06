@@ -29,11 +29,11 @@ class Question extends Model
     {
         return $this->hasMany(Comment::class);
     }
-    public function votes()
+    public function questions_votes()
     {
         return $this->hasMany(QuestionVote::class);
     }
-    protected function getVotes ()
+    protected function getVotes()
     {
         $votes = $this->votes;
         $upvotes = 0;

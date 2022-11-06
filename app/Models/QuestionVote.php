@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class QuestionVote extends Model
 {
+  protected $fillable = [
+    "question_id",
+    "user_id",
+    "vote"
+];
     use HasFactory;
     public function Question(){
       return $this->belongsTo(Question::class);

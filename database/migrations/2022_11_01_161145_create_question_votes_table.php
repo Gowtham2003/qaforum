@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('questions_votes', function (Blueprint $table) {
+        Schema::create('question_votes', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('vote');
             $table->foreignId("user_id")->constrained()->cascadeondelete();

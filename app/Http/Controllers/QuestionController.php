@@ -13,13 +13,13 @@ class QuestionController extends Controller
 {
     public function index()
     {
-        return Question::with("user")->withCount("votes")->paginate();
+        return Question::with("user")->withCount("questions_votes")->withSum("questions_votes","vote")->paginate();
     }
 
     public function indexByUser(Request $request)
     {
         $user = $request->userinfo;
-        return Question::where("user_id", $user->id)->paginate();
+        return Question::where("user_id", $user->id)->with("user")->withCount("questions_votes")->withSum("questions_votes","vote")->paginate();
     }
     public function getComments()
     {
@@ -75,7 +75,7 @@ class QuestionController extends Controller
         if ($existingVote) {
             if (!$existingVote->vote == 1) $existingVote->update(["vote" => 1]);
         } else {
-            QuestionVote::create(["question_id" => $id, "user_id" => request()->userinfo->id, "vote" => 1]);
+            QuestionVote::create(["question_id" => $question->id, "user_id" => request()->userinfo->id, "vote" => 1]);
         };
 
         return "success";
@@ -87,8 +87,8 @@ class QuestionController extends Controller
         if ($existingVote) {
             if (!$existingVote->vote == -1) $existingVote->update(["vote" => -1]);
         } else {
-            QuestionVote::create(["question_id" => $id, "user_id" => request()->userinfo->id, "vote" => -1]);
+            QuestionVote::create(["question_id" => $question->id, "user_id" => request()->userinfo->id, "vote" => -1]);
         };
-        return $question;
+        return "success";
     }
 }
