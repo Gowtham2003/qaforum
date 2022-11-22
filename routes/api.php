@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\CheckAuth;
@@ -30,6 +31,7 @@ Route::middleware(CheckAuth::class)->group(function () {
     Route::delete('/question/{id}', [QuestionController::class, 'destroy']);
     Route::put('/comment/{id}/upvote', [CommentController::class, 'upvote']);
     Route::put('/comment/{id}/downvote', [CommentController::class, 'downvote']);
+    Route::post('/comments', [CommentController::class, 'create']);
 });
 
 Route::post('/register', [UserController::class, 'register']);
@@ -39,4 +41,3 @@ Route::get('/user/{id}', [UserController::class, 'show']);
 Route::get('/question/{id}', [QuestionController::class, 'show']);
 
 Route::get('/question/comments', [QuestionController::class, 'getComments']);
-Route::get('/comment/comments', [QuestionController::class, 'getComments']);

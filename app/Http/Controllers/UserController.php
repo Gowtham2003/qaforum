@@ -87,6 +87,12 @@ class UserController extends Controller
     }
     public function show($id)
     {
-      return User::with("questions")->findOrFail($id);
+      $user = User::with("questions")->withCount("questions")->findOrFail($id);
+      $questions = $user->questions;
+      foreach ($questions as $question) {
+        $question->loadSum("questions_votes","vote");
+      }
+      $user->questions = $questions;
+      return $user;
     }
 }

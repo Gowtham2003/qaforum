@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('question_votes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('vote');
+            $table->decimal('vote');
             $table->foreignId("user_id")->constrained()->cascadeondelete();
             $table->foreignId("question_id")->constrained()->cascadeondelete();
             $table->timestamps();

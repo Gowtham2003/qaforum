@@ -15,13 +15,18 @@ class Comment extends Model
      */
     protected $fillable = [
         "comment",
-        "votes"
+        "votes",
+        "question_id",
+        "user_id"
 
     ];
     public function question(){
         return $this->belongsTo(Question::class);
       }
-    public function votes(){
+    public function user(){
+        return $this->belongsTo(User::class);
+      }
+    public function comments_votes(){
     return $this->hasMany(CommentVote::class);
     }
     public function getVotes(){

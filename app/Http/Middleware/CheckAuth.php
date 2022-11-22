@@ -22,13 +22,13 @@ class CheckAuth
 	if(!$accessToken){
 		return response()->json(["message" => "Access Denied. Must Provide Valid Token"], 401);
 	}
+  error_log($accessToken);
 
-    error_log($accessToken);
 	try {
     $decoded = JWT::decode($accessToken,new Key(env('JWT_PRIVATE_KEY'), 'HS256'));
     
-		$request["userinfo"] = $decoded;
-
+		$request->userinfo = $decoded;
+  error_log(json_encode($request->userinfo));
 		return $next($request);
 	} catch (\Throwable $th) {
 		return response()->json(["message" => "Unauthorized user"], 401);

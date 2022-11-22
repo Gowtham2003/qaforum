@@ -1,0 +1,20 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1
+  },
+  "1 error pnpm": {
+    "code": "ELIFECYCLE",
+    "errno": "ENOENT",
+    "syscall": "spawn",
+    "file": "sh",
+    "pkgid": "@",
+    "stage": "dev",
+    "script": "vite",
+    "err": {
+      "name": "pnpm",
+      "message": "@ dev: `vite`\nspawn ENOENT",
+      "code": "ELIFECYCLE",
+      "stack": "pnpm: @ dev: `vite`\nspawn ENOENT\n    at ChildProcess.<anonymous> (/data/data/com.termux/files/home/.local/share/pnpm/global/5/.pnpm/pnpm@7.4.1/node_modules/pnpm/dist/pnpm.cjs:95159:22)\n    at ChildProcess.emit (node:events:513:28)\n    at maybeClose (node:internal/child_process:1091:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:302:5)"
+    }
+  }
+}

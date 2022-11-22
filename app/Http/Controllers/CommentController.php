@@ -6,17 +6,21 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
 use App\Models\CommentVote;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
 
     public function create(Request $request)
     {
+        $user = $request->userinfo;
         $request->validate([
-            'comment' => 'required',
+          'comment' => 'required',
+          'question_id' => 'required'
         ]);
         $data = $request->all();
+        $data["user_id"] = $user->id;
+        $data["votes"] = 0;
         $comment = Comment::create($data);
         return response()->json($comment);
     }
@@ -33,27 +37,34 @@ class CommentController extends Controller
     }
     public function upvote($id)
     {
+      $vote = [];
         $comment = Comment::find($id);
         $existingVote = CommentVote::where("comment_id", $id)->where("user_id", request()->userinfo->id)->first();
         if ($existingVote) {
             if (!$existingVote->vote == 1) $existingVote->update(["vote" => 1]);
+            $existingVote->save();
+            $vote = $existingVote;
         } else {
             CommentVote::create(["comment_id" => $id, "user_id" => request()->userinfo->id, "vote" => 1]);
         };
 
-        return "success";
+        // return "success";
+        return $vote;
     }
     public function downvote($id)
     {
+      $vote = [];
         $comment = Comment::find($id);
         $existingVote = CommentVote::where("comment_id", $id)->where("user_id", request()->userinfo->id)->first();
         if ($existingVote) {
-            if (!$existingVote->vote == -1) $existingVote->update(["vote" => -1]);
+            if (!($existingVote->vote == -1)) $existingVote->update(["vote" => -1]);
+            $existingVote->save();
+            $vote = $existingVote;
         } else {
             CommentVote::create(["comment_id" => $id, "user_id" => request()->userinfo->id, "vote" => -1]);
         };
-
-        return "success";
+       return $vote;
+        // return "success";
     }
     public function destroy(Comment $comment)
     {

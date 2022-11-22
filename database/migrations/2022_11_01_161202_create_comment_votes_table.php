@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('comments_votes', function (Blueprint $table) {
+        Schema::create('comment_votes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('vote');
+            $table->decimal('vote');
             $table->foreignId("user_id")->constrained()->cascadeondelete();
             $table->foreignId("comment_id")->constrained()->cascadeondelete();
             $table->timestamps();

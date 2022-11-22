@@ -13,7 +13,7 @@ class QuestionController extends Controller
 {
     public function index()
     {
-        return Question::with("user")->withCount("questions_votes")->withSum("questions_votes","vote")->paginate();
+        return Question::with("user")->withCount("comments")->withSum("questions_votes","vote")->orderBy("created_at","desc")->paginate(50);
     }
 
     public function indexByUser(Request $request)
@@ -44,7 +44,13 @@ class QuestionController extends Controller
 
     public function show($id)
     {
-        return Question::with("user")->findOrFail($id);
+      $question = Question::with("user","comments","comments.user")->withSum("questions_votes as vote_sum","vote")->withCount("comments")->findOrFail($id);
+      $comments = $question->comments;
+      foreach ($comments as $key => $comment) {
+        $comment->loadSum("comments_votes as vote_sum","vote");
+      }
+      $question->comments = $comments;
+      return $question;
     }
 
 
@@ -64,31 +70,42 @@ class QuestionController extends Controller
         $question = Question::find($id);
         $question->update($data);
     }
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
         return Question::destroy($id);
     }
-    public function upvote($id)
+    public function upvote(Request $request,$id)
     {
+      $vote = [];
         $question = Question::find($id);
-        $existingVote = QuestionVote::where("question_id", $id)->where("user_id", request()->userinfo->id)->first();
+        $user = $request->userinfo;
+        $existingVote = QuestionVote::where("question_id", $id)->where("user_id", $user->id)->first();
         if ($existingVote) {
-            if (!$existingVote->vote == 1) $existingVote->update(["vote" => 1]);
+            if (!($existingVote->vote == 1)) $existingVote->update(["vote" => 1]);
+            $existingVote->save();
+            $vote = $existingVote;
         } else {
-            QuestionVote::create(["question_id" => $question->id, "user_id" => request()->userinfo->id, "vote" => 1]);
+            $vote = QuestionVote::create(["question_id" => $question->id, "user_id" => $user->id, "vote" => 1]);
         };
 
-        return "success";
+        return $vote;
+
+        //return "success";
     }
-    public function downvote($id)
+    public function downvote(Request $request,$id)
     {
+      $vote = [];
         $question = Question::find($id);
-        $existingVote = QuestionVote::where("question_id", $id)->where("user_id", request()->userinfo->id)->first();
+        $user = $request->userinfo;
+        $existingVote = QuestionVote::where("question_id", $id)->where("user_id", $user->id)->first();
         if ($existingVote) {
-            if (!$existingVote->vote == -1) $existingVote->update(["vote" => -1]);
+            if (!($existingVote->vote == -1)) $existingVote->update(["vote" => -1]);
+            $existingVote->save();
+            $vote = $existingVote;
         } else {
-            QuestionVote::create(["question_id" => $question->id, "user_id" => request()->userinfo->id, "vote" => -1]);
+            $vote = QuestionVote::create(["question_id" => $question->id, "user_id" => $user->id, "vote" => -1]);
         };
-        return "success";
+        return $vote;
+        //return "success";
     }
 }
