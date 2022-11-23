@@ -49,7 +49,9 @@ class QuestionController extends Controller
       foreach ($comments as $key => $comment) {
         $comment->loadSum("comments_votes as vote_sum","vote");
       }
+
       $question->comments = $comments;
+      $question->comments->sortByDesc("vote_sum");
       return $question;
     }
 
